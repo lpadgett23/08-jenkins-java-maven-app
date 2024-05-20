@@ -1,3 +1,5 @@
+def gv
+
 pipeline {
     agent any
     parameters {
@@ -5,9 +7,18 @@ pipeline {
         booleanParam(name: 'executeTests', defaultValue: true, description:'')
     }
     stages {
+        stage("init") {
+            steps {
+                script {
+                    gv = load "script.groovy"
+                }
+            }
+        }
         stage("build") {
             steps {
-                echo 'building the application...'
+                script {
+                    gv.buildApp()
+                }
             }
         }
         stage("test") {
@@ -16,24 +27,18 @@ pipeline {
                    params.executeTests 
                }
            }
-            steps {
-                echo 'testing the application...'
-            }
+           steps {
+               script {
+                   gv.testApp()    
+               }
+           }
         }
         stage("deploy") {   
             steps {
-                echo 'deploying the application...'
-                echo "deploying version ${params.VERSION}"
-                // echo "deploying with ${SERVER_CREDENTIALS}"
-                // sh "${SERVER_CREDENTIALS}"
-                // better practice -- instead, use a wrapper approach thx to credentials plugin + credentials binding plugin:
-                // withCredentials([
-                //     usernamePassword(credentials: 'server-credentials-TEST', usernameVariable: USER, passwordVARIABLE: PWD)
-                // ]) {
-                //     sh "some script ${USER} ${PWD}"
-                // }
+                script {
+                    gv.deployApp()
+                }
             }
         }
     }
-    // post { } block       // always, success, failure -- build status or build status changes can be conditions for the post block
 }
