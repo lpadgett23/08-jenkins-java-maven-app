@@ -1,6 +1,10 @@
 #!/user/bin/env groovy
 
-@Library('jenkins-shared-library')  // you'll need to add an underscore at end of this decorator()_ like that. (IF you don't have a variable def right below it) (we have a var def on next line though so no need for _ in this case)
+library identifier: "jenkins-shared-library@main", retriever: modernSCM(
+    [$class: 'GitSCMSource',
+    remote: 'https://github.com/lpadgett23/jenkins-shared-library.git',
+    credentialsId: 'github-credentials']) 
+
 def gv
 
 pipeline {
