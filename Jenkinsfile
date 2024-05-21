@@ -1,36 +1,39 @@
+#!/user/bin/env groovy
+
+@Library('jenkins-shared-library')  // you'll need to add an underscore at end of this decorator()_ like that. (IF you don't have a variable def right below it) (we have a var def on next line though so no need for _ in this case)
+def gv
+
 pipeline {
     agent any
-    stages {
-        stage('Test') {  // tests should be executed for all branches, no conditional logic needed cf other stages
+    tools {
+        maven 'Maven'
+    }
+   stages {
+        stage('init') {
             steps {
                 script {
-                    echo "Testing the application..."  
-                    echo "Executing pipeline for branch ${BRANCH_NAME}"
+                    gv = load "script.groovy"
                 }
             }
         }
-        stage('Build') {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
+        stage('Build jar') {
             steps {
                 script {
-                    echo "Building teh application..."
-                    
+                    buildJar()
+                }
+            }
+        }
+        stage('Build image') {
+            steps {
+                script {
+                    buildImage()
                 }
             }
         }
         stage('Deploy') {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
             steps {
                 script {
-                    echo "Deploying the application..."  
+                    gv.deployApp()
                 }
             }
         }
