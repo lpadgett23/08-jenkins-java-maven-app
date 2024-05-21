@@ -23,10 +23,12 @@ pipeline {
                 }
             }
         }
-        stage('Build image') {
+        stage('Build and push image') {
             steps {
                 script {
-                    buildImage "lepcloud23/demo-app:jma-3.1"
+                    buildImage "lepcloud23/demo-app:jma-3.2"
+                    dockerLogin()
+                    dockerPush "lepcloud23/demo-app:jma-3.2"
                 }
             }
         }
