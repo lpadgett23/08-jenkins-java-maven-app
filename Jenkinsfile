@@ -26,7 +26,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    buildImage()
+                    buildImage "lepcloud23/demo-app:jma-3.1"
                 }
             }
         }
