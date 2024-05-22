@@ -30,9 +30,9 @@ pipeline {
         stage('Build and push image') {
             steps {
                 script {
-                    buildImage "lepcloud23/demo-app:jma-3.2"
+                    buildImage "lepcloud23/demo-app:jma-3.3"
                     dockerLogin()
-                    dockerPush "lepcloud23/demo-app:jma-3.2"
+                    dockerPush "lepcloud23/demo-app:jma-3.3"
                 }
             }
         }
