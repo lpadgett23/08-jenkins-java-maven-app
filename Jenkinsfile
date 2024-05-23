@@ -1,36 +1,36 @@
+def gv
+
 pipeline {
     agent any
+    tools {
+        maven 'maven-3.9'
+    }
     stages {
-        stage('Test') {  // tests should be executed for all branches, no conditional logic needed cf other stages
+        stage('Build app') {
             steps {
                 script {
-                    echo "Testing the application..."  
-                    echo "Executing pipeline for branch ${BRANCH_NAME}"
+                    echo "Building the application..."
+                    sh 'mvn package'
                 }
             }
         }
-        stage('Build') {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
+        stage('Build image') {
             steps {
                 script {
-                    echo "Building teh application..."
-                    
+                    echo "Building the docker image for branch ${BRANCH_NAME}..."
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', userVariable: 'USER')]) {
+                        sh 'docker build -t lepcloud23/demo-app:jma-3.3.4 .'
+                        sh 'echo $PASS | docker login -u $USER --password-stdin'
+                        sh 'docker push lepcloud23/demo-app:jma-3.3.4'
+                    }
+                    echo "Pushed the docker image to docker hub demo-app repo"
                 }
             }
         }
         stage('Deploy') {
-            when {
-                expression {
-                    BRANCH_NAME == "main"
-                }
-            }
             steps {
                 script {
-                    echo "Deploying the application..."  
+                    echo "Deploying docker image..."  
                 }
             }
         }
