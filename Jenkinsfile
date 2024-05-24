@@ -17,7 +17,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    echo "Building the docker image for branch ${BRANCH_NAME}..."
+                    echo "Building the docker image..."
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', userVariable: 'USER')]) {
                         sh 'docker build -t lepcloud23/demo-app:jma-3.3.4 .'
                         sh 'echo $PASS | docker login -u $USER --password-stdin'
