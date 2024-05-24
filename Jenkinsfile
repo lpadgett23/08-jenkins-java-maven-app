@@ -1,5 +1,3 @@
-#!/usr/bin/env groovy
-
 pipeline {
     agent any
     tools {
@@ -19,7 +17,8 @@ pipeline {
                                         // appending build_number as a suffix to the version num is one of the common approaches to tagging images (but there are multiple ways/standards for how this can be done)
                 }
             }
-        }stage('Build app') {
+        }
+        stage('Build app') {
             steps {
                 script {
                     echo "Building the application..."
