@@ -49,10 +49,10 @@ pipeline {
         stage('Commit version update') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')])
+                    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                         sh 'git config --global user.email "jenkins@example.com"'
                         sh 'git config --global user.name "jenkins"'
-                        
+
                         sh 'git status'
                         sh 'git branch'
                         sh 'git config --list'
@@ -60,6 +60,7 @@ pipeline {
                         sh 'git add .'
                         sh 'git commit -m "ci: version bump"'
                         sh 'git push origin HEAD:jenkins-jobs-2nd'  
+                    }
                 }
             }
         }
